@@ -1,0 +1,32 @@
+# Run configuration for Self-Consistency (SC) - Baseline Method
+run_id: comparative-0-sc-gsm8k
+
+method:
+  type: self_consistency
+  name: "Self-Consistency"
+  description: "Multi-sample decoding with majority voting on final answers"
+  
+  # Sampling parameters
+  num_samples: 8  # K samples per question
+  temperature: 0.7
+  max_tokens: 512
+  
+  # SC specific parameters
+  voting_strategy: majority  # simple majority vote on extracted numeric answers
+
+model:
+  provider: openai
+  name: gpt-4o-mini  # same model as proposed method
+  api_key_env: OPENAI_API_KEY
+
+dataset:
+  name: gsm8k
+  split: test
+  num_questions: 200  # same subsample as proposed method
+  subsample_seed: 42
+
+inference:
+  batch_size: 1
+  sanity_num_samples: 10  # number of questions in sanity_check mode
+  early_stopping: true  # stop early when majority is reached
+  early_stopping_threshold: 5  # if 5/8 agree, can stop sampling

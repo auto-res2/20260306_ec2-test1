@@ -1,0 +1,41 @@
+# Run configuration for Budgeted Verifiability-Driven CoT (BV-CoT) - Proposed Method
+run_id: proposed-bvcot-gsm8k
+
+method:
+  type: bvcot
+  name: "Budgeted Verifiability-Driven CoT"
+  description: "Two-stage multi-sample decoding with verifiability-constrained selection"
+  
+  # Sampling parameters
+  num_samples: 8  # K samples per question
+  temperature: 0.7
+  max_tokens: 512
+  
+  # BV-CoT specific parameters
+  max_steps: 10  # B: max atomic steps per certificate
+  verifiability_threshold: 0.6  # τ: minimum verifiability score to consider
+  confidence_weight: 0.5  # weight for self-reported confidence in aggregation
+  
+  # Verifiability proxy weights
+  verifiability:
+    step_count_weight: 0.25  # penalty for exceeding max_steps
+    equation_density_weight: 0.3  # reward for explicit equations
+    new_entity_penalty_weight: 0.2  # penalty for introducing new entities
+    numeric_consistency_weight: 0.25  # reward for internal numeric consistency
+
+model:
+  provider: openai
+  name: gpt-4o-mini  # fast, cost-effective model
+  api_key_env: OPENAI_API_KEY
+
+dataset:
+  name: gsm8k
+  split: test
+  num_questions: 200  # subsample for runner constraints
+  subsample_seed: 42
+
+inference:
+  batch_size: 1
+  sanity_num_samples: 10  # number of questions in sanity_check mode
+  early_stopping: true  # stop early when majority is reached in baseline
+  early_stopping_threshold: 5  # SC: if 5/8 agree, can stop sampling

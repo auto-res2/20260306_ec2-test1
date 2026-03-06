@@ -11,8 +11,14 @@ mode: main
 # Results output directory
 results_dir: .research/results
 
-# WandB configuration (will be set by AI agent)
+# WandB configuration
 wandb:
-  entity: ???
-  project: ???
+  entity: airas
+  project: 20260306_ec2-test1
   mode: online
+
+# Cache directory for datasets and models
+cache_dir: .cache
+
+# Random seed for reproducibility
+seed: 42
